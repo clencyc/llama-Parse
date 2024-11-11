@@ -1,0 +1,17 @@
+pycryptodomex
+pandas
+tqdm
+requests
+types-requests
+pyyaml
+types-PyYAML
+jinja2
+zstandard
+appdirs
+texttable
+build
+pkginfo
+boto3>=1.23.0
+urllib3<2,>=1.21.1;python_version<"3.10"
+urllib3>=1.21.1;python_version>="3.10"
+numpy<2

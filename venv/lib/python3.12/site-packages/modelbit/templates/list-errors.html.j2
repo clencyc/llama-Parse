@@ -1,0 +1,18 @@
+{% macro errorItem(item) -%}
+  <div style="{{ styles.borderedGroup }}">
+    {% if item.kind == "GenericError" %}
+      <div style="{{ styles.base }}">
+        {{ item.errorText }}
+      </div>
+    {% endif %}
+  </div>
+{%- endmacro %}
+
+{% if errorsList | length > 0 %}
+  <div style="{{ styles.base }} margin-top: 10px;">
+    <div style="{{ styles.headerError }}">Errors</div>    
+    {% for error in errorsList %}  
+      {{ errorItem(error) }}
+    {% endfor %}
+  </div>
+{% endif %}

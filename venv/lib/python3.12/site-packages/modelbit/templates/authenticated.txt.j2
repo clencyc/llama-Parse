@@ -1,0 +1,8 @@
+{% include 'pip-upgrade.txt.j2'%}
+You're {{ format.green("connected") }} to Modelbit as {{ email }}.
+Workspace: {{ format.bold(workspace) }}.
+{% if inRegion %}
+Region: {{ format.bold(inRegion) }}
+{% endif %}
+Branch: {{ format.bold(currentBranch) }}
+{% include 'list-warnings.txt.j2'%}

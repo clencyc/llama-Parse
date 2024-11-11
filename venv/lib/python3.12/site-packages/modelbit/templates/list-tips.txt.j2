@@ -1,0 +1,12 @@
+{% macro tipItem(item) -%}
+{% if item.kind == "GenericTip" %}
+{{ item.tipText }} Learn more at {{ item.docUrl }}
+{% endif %}
+{%- endmacro -%}
+
+{% if tipsList | length > 0 %}
+Tips:
+{% for tip in tipsList %}
+  {{ tipItem(tip) }}
+{% endfor %}
+{% endif %}

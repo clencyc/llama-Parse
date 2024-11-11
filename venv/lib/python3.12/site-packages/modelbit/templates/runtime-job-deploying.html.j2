@@ -1,0 +1,8 @@
+<div style="{{ styles.container }}">
+  <div>
+    <span style="{{ styles.headerSuccess }}">Adding job </span> <span style="{{ styles.code }}">{{ jobName }}</span>{% if deploymentName %} to deployment <span style="{{ styles.code }}">{{ deploymentName }}</span>{% endif %}
+  </div>
+  {% include 'runtime-notes.html.j2'%}
+
+  <div style="{{ styles.base }}">Uploading dependencies...</div>
+</div>

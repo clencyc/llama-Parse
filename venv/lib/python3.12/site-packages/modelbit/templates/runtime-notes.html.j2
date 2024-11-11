@@ -1,0 +1,5 @@
+{% if errorsList | length > 0 or warningsList | length > 0 or tipsList | length > 0%}
+  {% include 'list-warnings.html.j2'%}
+  {% include 'list-errors.html.j2'%}
+  {% include 'list-tips.html.j2'%}
+{% endif %}

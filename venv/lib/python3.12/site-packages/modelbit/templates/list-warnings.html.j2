@@ -1,0 +1,146 @@
+{% macro deploymentOrJob() -%}
+  {% if standaloneJob %}job{% else %}deployment{% endif %}
+{%- endmacro %}
+
+{% macro deployFunc() -%}
+  {% if standaloneJob %}mb.add_job{% else %}mb.deploy{% endif %}
+{%- endmacro %}
+
+{% macro warningItem(item) -%}
+  <div style="{{ styles.borderedGroup }}">
+
+    {% if item.kind == "MismatchedPackageWarning" %}
+      <div style="{{ styles.base }}">
+        In your <span style="{{ styles.code }}">{{ deployFunc() }}</span> parameters you specified <span style="{{ styles.code }}">{{ item.desiredPackage }}</span>.
+        However the version detected locally is <span style="{{ styles.code }}">{{ item.similarPackage }}</span>. Version mismatches can lead to unexpected
+        behavior.
+      </div>
+
+      <div style="{{ styles.base }}">To match your local environment to your {{ deploymentOrJob() }}'s environment, run:</div>
+      <div style="{{ styles.base }} padding-left: 15px;">
+        <span style="{{ styles.code }}">!pip install {{ item.desiredPackage }}</span>
+      </div>
+
+      <div style="{{ styles.base }}">Alternatively, to match your {{ deploymentOrJob() }}'s environment to your local environment, include this version in your
+      <span style="{{ styles.code }}">{{ deployFunc() }}</span> call instead:</div>
+      <div style="{{ styles.base }} padding-left: 15px;">
+        <span style="{{ styles.code }}">{{ deployFunc() }}(my_deploy_function, <b>python_packages=["{{ item.similarPackage }}"]</b>)</span>
+      </div>
+    {% endif %}
+
+    {% if item.kind == "MissingPackageFromImportWarning" %}
+      <div style="{{ styles.base }}">
+        Your {{ deploymentOrJob() }} imports <span style="{{ styles.code }}">{{ item.importedModule }}</span> but you did not
+        specify <span style="{{ styles.code }}">{{ item.localPackage }}</span> in your production environment.
+      </div>
+
+      <div style="{{ styles.base }}">To add the missing package to your production environment, run:</div>
+      <div style="{{ styles.base }} padding-left: 15px;">
+        <span style="{{ styles.code }}">{{ deployFunc() }}(my_deploy_function, <b>python_packages=["{{ item.localPackage }}"]</b>)</span>
+      </div>
+    {% endif %}
+
+    {% if item.kind == "SkippedPackageWarning" %}
+      <div style="{{ styles.base }}">
+        The {{ deploymentOrJob() }}'s environment will not automatically include <span style="{{ styles.code }}">{{ item.importedModule }}</span>. {{ item.reason }}.
+      </div>
+    {% endif %}
+
+    {% if item.kind == "MissingExtraFileWarning" %}
+      <div style="{{ styles.base }}">
+        Your {{ deploymentOrJob() }} imports <span style="{{ styles.code }}">{{ item.moduleName }}</span> but it doesn't appear
+        to be from a pip package or in <span style="{{ styles.code }}">extra_files</span>.
+      </div>
+
+      <div style="{{ styles.base }}">
+        To add the missing module to your production environment, include it with 
+        <span style="{{ styles.code }}">extra_files</span>.
+      </div>
+      <div style="{{ styles.base }} padding-left: 15px;">
+        <span style="{{ styles.code }}">{{ deployFunc() }}(my_deploy_function, <b>extra_files=["{{ item.moduleName }}.py"]</b>)</span>
+      </div>
+    {% endif %}
+
+    {% if item.kind == "ProbablyNotAPackageWarning" %}
+      <div style="{{ styles.base }}">
+        Your {{ deploymentOrJob() }} specifies <span style="{{ styles.code }}">{{ item.packageName }}</span> but that package is not
+        installed. Is the package name correct?
+      </div>
+    {% endif %}
+
+    {% if item.kind == "ProbablyWrongRequirement" %}
+      <div style="{{ styles.base }}">
+        Did you mean to use <span style="{{ styles.code }}">{{ item.packageName }}</span>? {{item.reason}}
+      </div>
+    {% endif %}
+
+    {% if item.kind == "ProbablyVersionWrong" %}
+      <div style="{{ styles.base }}">
+        Your {{ deploymentOrJob() }} specifies <span style="{{ styles.code }}">{{ item.packageName }}</span> but that version was not
+        found on PyPI. Is the version correct?
+      </div>
+    {% endif %}
+
+    {% if item.kind == "SnowparkBadPackageWarning" %}
+      <div style="{{ styles.base }}">
+        This deployment may not work in Snowflake Snowpark because <span style="{{ styles.code }}">{{ item.packageName }}</span> was
+        not found in the Snowpark package repository.
+      </div>
+    {% endif %}
+
+    {% if item.kind == "SnowparkBadPackageVersionWarning" %}
+      <div style="{{ styles.base }}">
+        This deployment may not work in Snowflake Snowpark because <span style="{{ styles.code }}">{{ item.packageName }}=={{ item.usingVersion }}</span> was
+        not found in the Snowpark package repository.
+      </div>
+      <div style="{{ styles.base }}">
+        Try switching to another version of <span style="{{ styles.code }}">{{ item.packageName }}</span>. These versions are available: <span style="{{ styles.code }}">{{ item.availableVersionsStr }}</span>.
+      </div>
+    {% endif %}
+
+    {% if item.kind == "SnowflakeRemovingMockFunctionValue" %}
+      <div style="{{ styles.base }}">
+        The previous version of this deployment had a <span style="{{ styles.code }}">snowflake_mock_return_value</span> of
+        <span style="{{ styles.code }}">{{ item.existingMockReturnValue }}</span> and this version is removing it.
+      </div>
+    {% endif %}
+
+    {% if item.kind == "ProbablyWantDataframeModeWarning" %}
+      <div style="{{ styles.base }}">
+        Your deployment appears to be a good fit for setting <span style="{{ styles.code }}">dataframe_mode = True</span>.
+        <span style="{{ styles.link }}" onClick="window.open('https://doc.modelbit.com/deployments/dataframe-mode')">
+            Learn more.
+          </span>
+      </div>
+    {% endif %}
+
+    {% if item.kind == "DifferentPythonVerWarning" %}
+      <div style="{{ styles.base }}">
+        In your <span style="{{ styles.code }}">{{ deployFunc() }}</span> parameters you specified <span style="{{ styles.code }}">Python {{ item.desiredVersion }}</span>.
+        However the version detected locally is <span style="{{ styles.code }}">Python {{ item.localVersion }}</span>. Version mismatches can lead to unexpected
+        behavior.
+      </div>
+
+      <div style="{{ styles.base }}">To match your {{ deploymentOrJob() }}'s environment to your local environment, include this version in your
+      <span style="{{ styles.code }}">{{ deployFunc() }}</span> call instead:</div>
+      <div style="{{ styles.base }} padding-left: 15px;">
+        <span style="{{ styles.code }}">{{ deployFunc() }}(my_deploy_function, <b>python_version="{{ item.localVersion }}"</b>)</span>
+      </div>
+
+      <div style="{{ styles.base }}">To match your local environment to your {{ deploymentOrJob() }}'s environment, install
+      <span style="{{ styles.code }}">Python {{ item.desiredVersion }}</span> locally.</div>
+    {% endif %}
+
+  </div>
+{%- endmacro %}
+
+{% if warningsList | length > 0 %}
+  <div style="{{ styles.base }} margin-top: 10px;">
+    <div style="{{ styles.header }}">Heads up!</div>
+    <div>
+      {% for warning in warningsList %}  
+        {{ warningItem(warning) }}
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}

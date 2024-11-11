@@ -1,0 +1,18 @@
+{% macro tipItem(item) -%}
+  <div style="{{ styles.borderedGroup }}">
+    {% if item.kind == "GenericTip" %}
+      <div style="{{ styles.base }}">
+        {{ item.tipText }} <a style="{{ styles.link }}" href="{{ item.docUrl }}" target="_blank">Learn more.</a>
+      </div>
+    {% endif %}
+  </div>
+{%- endmacro %}
+
+{% if tipsList | length > 0 %}
+  <div style="{{ styles.base }} margin-top: 10px;">
+    <div style="{{ styles.headerSuccess }}">Tips</div>    
+    {% for tip in tipsList %}  
+      {{ tipItem(tip) }}
+    {% endfor %}
+  </div>
+{% endif %}

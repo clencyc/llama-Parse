@@ -1,0 +1,5 @@
+{% if errorsList | length > 0 or warningsList | length > 0 or tipsList | length > 0%}
+{%- include 'list-warnings.txt.j2' -%}
+{%- include 'list-errors.txt.j2' -%}
+{%- include 'list-tips.txt.j2' -%}
+{% endif %}

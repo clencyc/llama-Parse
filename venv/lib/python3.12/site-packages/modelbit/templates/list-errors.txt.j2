@@ -1,0 +1,12 @@
+{% macro errorItem(item) -%}
+{% if item.kind == "GenericError" %}
+{{ item.errorText }}
+{% endif %}
+{%- endmacro -%}
+
+{% if errorsList | length > 0 %}
+Errors:
+{% for error in errorsList %}
+  {{ errorItem(error) }}
+{% endfor %}
+{% endif %}

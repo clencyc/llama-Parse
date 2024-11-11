@@ -1,0 +1,11 @@
+{{ format.green("Success!") }}
+
+{% if deployTimeWords %}
+Job {{ format.bold(jobName) }} will be ready in {{ deployTimeWords }}
+{% else %}
+{% if deployMessage %}
+  {{ deployMessage }}
+{% endif %}
+{% endif %}
+
+View in Modelbit: {{ runtimeOverviewUrl }}

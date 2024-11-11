@@ -1,0 +1,11 @@
+{% if needsUpgrade %}
+  <div style="{{ styles.container }}">
+    <div style="{{ styles.header }}">Please upgrade Modelbit</div>
+    <div style="{{ styles.base }}">Your Modelbit package appears out of date.</div>
+    <div style="{{ styles.base }}">
+      Please run <span style="{{ styles.code }}">pip install --upgrade modelbit</span> to upgrade to the latest version.
+      (Installed: <span style="{{ styles.code }}">{{ needsUpgrade.installed }}</span>.
+      Latest: <span style="{{ styles.code }}">{{ needsUpgrade.latest }}</span>.)
+    </div>
+  </div>
+{% endif %}

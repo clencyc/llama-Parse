@@ -1,0 +1,12 @@
+{% include 'pip-upgrade.html.j2'%}
+<div style="{{ styles.container }}">
+  <div style="{{ styles.base }}">
+    You're <span style="{{ styles.connected }}">connected</span> to Modelbit as {{ email }}.
+    Workspace: <span style="{{ styles.info }}">{{ workspace }}</span>.
+    {% if inRegion %}
+      Region: <span style="{{ styles.info }}">{{ inRegion }}</span>
+    {% endif %}
+    Branch: <span style="{{ styles.info }}">{{ currentBranch }}</span>
+	</div>
+  {% include 'list-warnings.html.j2'%}
+</div>

@@ -1,0 +1,61 @@
+Metadata-Version: 2.1
+Name: modelbit
+Version: 0.42.3
+Summary: Modelbit helps you rapidly deploy and manage ML models with modern MLOps features.
+Home-page: https://www.modelbit.com
+Author: Modelbit
+Author-email: tom@modelbit.com
+License: Modelbit
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Framework :: IPython
+Classifier: Framework :: Jupyter
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: Other/Proprietary License
+Classifier: Operating System :: MacOS
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Operating System :: Microsoft
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pycryptodomex
+Requires-Dist: pandas
+Requires-Dist: tqdm
+Requires-Dist: requests
+Requires-Dist: types-requests
+Requires-Dist: pyyaml
+Requires-Dist: types-PyYAML
+Requires-Dist: jinja2
+Requires-Dist: zstandard
+Requires-Dist: appdirs
+Requires-Dist: texttable
+Requires-Dist: build
+Requires-Dist: pkginfo
+Requires-Dist: boto3 >=1.23.0
+Requires-Dist: numpy <2
+Requires-Dist: build <1.0.0
+Requires-Dist: importlib-metadata
+Requires-Dist: urllib3 <2,>=1.21.1 ; python_version < "3.10"
+Requires-Dist: urllib3 >=1.21.1 ; python_version >= "3.10"
+
+<br/>
+
+<p align="center">
+  <img src="https://doc.modelbit.com/img/modelbit-logo-with-name.svg" alt="Modelbit" width="500">
+</p>
+
+<br/><br/>
+
+<p align="center">Modelbit helps you rapidly deploy and manage ML models with modern MLOps features.</p>
+
+<p align="center">Learn more and sign up at <a href="https://www.modelbit.com/" target="_blank">modelbit.com</a>.</p>
+
+<br/><br/>

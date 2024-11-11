@@ -1,0 +1,10 @@
+{% if needsUpgrade %}
+
+{{format.purple("Your Modelbit package appears out of date.")}}
+
+  Please run {{format.green("pip install --upgrade modelbit")}} to upgrade to the latest version.
+
+Installed: {{ format.red(needsUpgrade.installed) }}
+Latest: {{ format.green(needsUpgrade.latest) }}
+
+{% endif %}

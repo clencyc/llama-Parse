@@ -1,0 +1,86 @@
+{% macro deploymentOrJob() -%}
+  {% if standaloneJob %}job{% else %}deployment{% endif %}
+{%- endmacro %}
+
+{% macro deployFunc() -%}
+  {% if standaloneJob %}mb.add_job{% else %}mb.deploy{% endif %}
+{%- endmacro %}
+
+{%- macro warningItem(item) -%}
+    {% if item.kind == "MismatchedPackageWarning" %}
+You chose {{ format.bold(item.desiredPackage) }} for your {{ deploymentOrJob() }}'s environment, but you have {{ format.bold(item.similarPackage) }} locally. Version matches can lead to unexpected behavior.
+
+To match your local environment to your {{ deploymentOrJob() }}'s environment, run:
+  {{ format.bold("pip install " + item.desiredPackage) }}
+
+Alternatively, to match your {{ deploymentOrJob() }}'s environment to your local environment, use this version instead:
+  {{ deployFunc() }}(my_deploy_function, {{ format.bold("python_packages=[\"" + item.similarPackage + "\"]") }})
+{% endif -%}
+
+{%- if item.kind == "MissingPackageFromImportWarning" %}
+Your {{ deploymentOrJob() }} imports {{ format.bold(item.importedModule) }} but you did not specify {{ format.bold(item.localPackage) }} in your production environment.
+
+{%if isIPython %}
+To add the missing package to your production environment, run:
+  {{ deployFunc() }}(my_deploy_function, {{ format.bold("python_packages=[\"" + item.localPackage + "\"]") }}
+{% else %}
+To add the missing package to your production environment, include {{ format.bold(item.localPackage) }} in your {{ format.bold("requirements.txt") }} file.
+{% endif %}
+{% endif -%}
+
+{%- if item.kind == "SkippedPackageWarning" %}
+The {{ deploymentOrJob() }}'s environment will not automatically include {{ format.bold(item.importedModule) }}. {{ item.reason }}.
+{% endif -%}
+
+{%- if isIPython and item.kind == "MissingExtraFileWarning" %}
+Your {{ deploymentOrJob() }} imports {{ format.bold(item.moduleName) }} but it doesn't appear to be from a pip package or in {{ format.bold("extra_files") }}.
+{% endif -%}
+
+{%- if isIPython and item.kind == "ProbablyNotAPackageWarning" %}
+Your {{ deploymentOrJob() }} specifies {{ format.bold(item.packageName) }} but that package is not installed. Is the package name correct?
+{% endif -%}
+
+{%- if isIPython and item.kind == "ProbablyWrongRequirement" %}
+Did you mean to use {{ format.bold(item.packageName) }}? {{ item.reason }}
+{% endif -%}
+
+{%- if isIPython and item.kind == "ProbablyVersionWrong" %}
+Your {{ deploymentOrJob() }} specifies {{ format.bold(item.packageName) }} but that version was not found on PyPI. Is the version correct?
+{% endif -%}
+
+{%- if isIPython and item.kind == "ProbablyWantDataframeModeWarning" %}
+Your deployment appears to be a good fit for setting {{ format.bold("dataframe_mode = True") }}. Learn more at https://doc.modelbit.com/deployments/dataframe-mode
+{% endif -%}
+
+{%- if item.kind == "SnowparkBadPackageWarning" %}
+This deployment may not work in Snowflake Snowpark because {{ format.bold(item.packageName) }} was not found in the Snowpark package repository.
+{% endif %}
+
+{%- if item.kind == "SnowparkBadPackageVersionWarning" %}
+This deployment may not work in Snowflake Snowpark because {{ format.bold(item.packageName) }}=={{ format.bold(item.usingVersion) }} was not found in the Snowpark package repository.
+
+Try switching to another version of {{ format.bold(item.packageName) }}. These versions are available: {{ format.bold(item.availableVersionsStr) }}.
+{% endif %}
+
+{%- if item.kind == "SnowflakeRemovingMockFunctionValue" %}
+The previous version of this deployment had a {{ format.bold("snowflake_mock_return_value") }} of {{ format.bold(item.existingMockReturnValue) }} and this version is removing it.
+{% endif %}
+
+{%- if item.kind == "DifferentPythonVerWarning" %}
+You chose {{ format.bold("Python "+ item.desiredVersion) }} for your {{ deploymentOrJob() }}'s environment, but you have {{format.bold("Python "+ item.localVersion) }} locally Version matches can lead to unexpected behavior.
+
+To match your {{ deploymentOrJob() }}'s environment to your local environment, use this version instead:
+  {{ deployFunc() }}(my_deploy_function, {{ format.bold("python_version=\"" + item.localVersion + "\"") }})
+
+Alternatively, to match your local environment to your {{ deploymentOrJob() }}'s environment, install {{ format.bold("Python " + item.desiredVersion) }} locally.
+{% endif %}
+{% endmacro -%}
+
+{% if warningsList | length > 0 %}
+
+{{ format.bold("***Heads Up!***") }}
+
+{% for warning in warningsList %}
+--> {{ warningItem(warning) }}
+{% endfor %}
+{% endif %}

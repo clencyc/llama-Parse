@@ -1,0 +1,32 @@
+<table style="{{ styles.base }}">
+  <thead style="{{ styles.base }}">
+    {% for header in headers %}
+      <th style="{{ header.style }} font-weight: bold;">{{ header.name }}</th>
+    {% endfor %}
+  </thead>
+  <tbody style="{{ styles.base }}">
+    {% for row in rows %}
+      <tr style="{{ styles.base }} {% if loop.index % 2 == 0 %} background-color: #f3f4f6; {% endif %}">
+        {% for col in row %}
+          <td style="{{ headers[loop.index - 1].style }}">
+            {% if col.__class__.__name__ == "UserImage" %}
+              <img style="{{ styles.userImage }}" height="32" width="32" referrerPolicy="no-referrer" alt="{{ col.ownerName }}" src="{{ col.imageUrl }}"/>
+            {% else %}
+              {% if headers[loop.index - 1].isCode %}
+                <span style="{{ styles.codeInTable }}">{{ col }}</span>
+              {% elif headers[loop.index - 1].isPassFail %}
+                {% if col %}
+                  <span style="{{ styles.passStyle }}">Pass</span>
+                {% else %}
+                  <span style="{{ styles.failStyle }}">Fail</span>
+                {% endif %}
+              {% else %}
+                {{ col }}
+              {% endif %}
+            {% endif %}
+          </td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
